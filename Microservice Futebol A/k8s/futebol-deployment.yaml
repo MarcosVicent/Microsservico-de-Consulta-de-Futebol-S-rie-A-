@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: futebol-deployment
+  labels:
+    app: futebol
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: futebol
+  template:
+    metadata:
+      labels:
+        app: futebol
+    spec:
+      containers:
+        - name: futebol-microsservico
+          image: [sua-imagem-docker-aqui]:[tag]
+          ports:
+            - containerPort: 8000
+          env:
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: futebol-config
+                  key: redis_host
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: futebol-config
+                  key: redis_port
+            - name: REDIS_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: futebol-config
+                  key: redis_db
+            - name: CACHE_TTL_SECONDS
+              valueFrom:
+                configMapKeyRef:
+                  name: futebol-config
+                  key: cache_ttl_seconds
